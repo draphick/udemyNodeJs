@@ -15,14 +15,10 @@ const userOne = {
     }]
 }
 
-beforeEach(async () => {
+beforeEach(async () => { // afterEach(() => {
     await User.deleteMany()
     await new User(userOne).save()
 })
-
-// afterEach(() => {
-//     console.log('after each')
-// })
 
 test('Should signup a new user', async () => {
     const response = await request(app).post('/users').send({
