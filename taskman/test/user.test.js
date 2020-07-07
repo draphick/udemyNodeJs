@@ -1,24 +1,9 @@
 const request = require('supertest')
-const jwt = require('jsonwebtoken')
-const mongoose = require('mongoose')
 const app = require('../src/app')
 const User = require('../src/models/user')
+const { userOne, userOneId, setupDatabase } = require('./fixtures/db')
 
-const userOneId = new mongoose.Types.ObjectId()
-const userOne = {
-    _id: userOneId,
-    name: 'jerm',
-    email: 'testjerm@example.com',
-    password: '56what!!',
-    tokens: [{
-        token: jwt.sign({ _id: userOneId }, process.env.JWTSECRET)
-    }]
-}
-
-beforeEach(async () => { // afterEach(() => {
-    await User.deleteMany()
-    await new User(userOne).save()
-})
+beforeEach(setupDatabase)
 
 test('Should signup a new user', async () => {
     const response = await request(app).post('/users').send({
@@ -85,23 +70,8 @@ test('get user profile failure', async () => {
         .expect(401)
 })
 
-test('delete account failure', async () => {
-    await request(app)
-        .delete('/users/me')
-        .set('authorization',`Bearer badauthtoken`)
-        .send()
-        .expect(401)
-})
 
-test('delete account success', async () => {
-    await request(app)
-        .delete('/users/me')
-        .set('authorization',`Bearer ${userOne.tokens[0].token}`)
-        .send()
-        .expect(200)
-    const user = await User.findById(userOneId)
-    expect(user).toBeNull()
-})
+
 
 test('upload avatar success', async () => {
     await request(app)
@@ -134,3 +104,22 @@ test('update field Failure', async () => {
         })
         .expect(400)
 })
+
+test('delete account failure', async () => {
+    await request(app)
+        .delete('/users/me')
+        .set('authorization',`Bearer badauthtoken`)
+        .send()
+        .expect(401)
+})
+
+test('delete account success', async () => {
+    await request(app)
+        .delete('/users/me')
+        .set('authorization',`Bearer ${userOne.tokens[0].token}`)
+        .send()
+        .expect(200)
+    const user = await User.findById(userOneId)
+    expect(user).toBeNull()
+})
+

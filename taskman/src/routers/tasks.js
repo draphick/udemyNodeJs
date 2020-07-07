@@ -2,7 +2,7 @@ const express = require('express')
 const auth = require('../middleware/auth')
 const router = new express.Router()
 const Task = require('../models/task')
-const User = require('../models/user')
+// const User = require('../models/user')
 
 
 router.post('/tasks', auth, async (req, res) => {
