@@ -103,3 +103,34 @@ test('delete account success', async () => {
     expect(user).toBeNull()
 })
 
+test('upload avatar success', async () => {
+    await request(app)
+        .post('/users/me/avatar')
+        .set('authorization',`Bearer ${userOne.tokens[0].token}`)
+        .attach('avatar','test/fixtures/profile-pic.jpg')
+        .expect(200)
+    const user = await User.findById(userOneId)
+    expect(user.avatar).toEqual(expect.any(Buffer))
+})
+
+test('update field success', async () => {
+    await request(app)
+        .patch('/users/me')
+        .set('authorization',`Bearer ${userOne.tokens[0].token}`)
+        .send({
+            name: 'Raph'
+        })
+        .expect(200)
+    const user = await User.findById(userOneId)
+    expect(user.name).toBe('Raph') 
+})
+
+test('update field Failure', async () => {
+    await request(app)
+        .patch('/users/me')
+        .set('authorization',`Bearer ${userOne.tokens[0].token}`)
+        .send({
+            location: 'Raph'
+        })
+        .expect(400)
+})
