@@ -1,8 +1,8 @@
 module.exports = {
     setApiKey() {
-        console.log('setting api')
+        // console.log('setting api')
     },
     send() {
-        console.log('not sending email')
+        // console.log('not sending email')
     }
 }
