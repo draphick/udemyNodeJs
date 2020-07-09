@@ -26,7 +26,7 @@ io.on('connection', (socket) => {
             return callback('Bad word found')
         }
         io.emit('message', generateMessage(chatMessage))
-        callback('Delivered!')
+        callback()
     })
 
     socket.on('disconnect', () => {
