@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html>
     <head>
-
     </head>
     <body>
         Chat Apps
-        <button id="increment">+1</button>
+        <form id="message-form">
+            <input name="message" placeholder='Add Message here'>
+            <button>submit</button>
+        </form>
         <script src="/socket.io/socket.io.js"></script>
         <script src="/js/chat.js"></script>
     </body>
