@@ -7,7 +7,12 @@ socket.on('message', (text) => {
 document.querySelector('#message-form').addEventListener('submit', (e) => {
     e.preventDefault()
     const chatMessage = e.target.elements.message.value
-    socket.emit('sendMessage', chatMessage)
+    socket.emit('sendMessage', chatMessage, (error) => {
+        if (error){
+            return console.log('Bad word found')
+        }
+        console.log(callbackFromServer)
+    })
 })
 
 document.querySelector('#send-location').addEventListener('click', () => {
@@ -17,7 +22,12 @@ document.querySelector('#send-location').addEventListener('click', () => {
     navigator.geolocation.getCurrentPosition((position) => {
         lat = position.coords.latitude
         long = position.coords.longitude
-        socket.emit('sendLocation', {lat, long})
+        socket.emit('sendLocation', {lat, long}, (callback) => {
+            if (callback){
+                return console.log('Location shared!')
+            }
+            console.log('Location not shared!')
+        })
 
     })
 })
